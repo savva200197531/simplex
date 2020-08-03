@@ -74,7 +74,7 @@ export default {
   data: () => ({
     valid: true,
     userInfo: {
-      name: 'Polina',
+      name: 'Andrew',
     },
     nameRules: [
       v => !!v || 'Name is required',

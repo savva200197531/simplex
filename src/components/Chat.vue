@@ -4,20 +4,8 @@
         v-model="drawer"
         app
     >
-      <v-list
-          v-for="(user, key) in users"
-          :key="key"
-          class="users-list"
-          dense
-      >
-        <v-list-item>
-          <span class="users-list__avatar">{{ user.name.charAt(0) }}</span>
-          {{ user.name }}
-          <span class="users-list__text text" :class="user.online ? 'online' : 'offline'">{{ user.online ? 'Online' : 'Offline' }}</span>
-        </v-list-item>
-      </v-list>
+      <display-users></display-users>
     </v-navigation-drawer>
-
     <v-app-bar
         app
         color="indigo"
@@ -47,7 +35,7 @@
       </div>
       <div class="actions">
         <v-textarea
-            type=""
+            v-model="newMessage"
             placeholder="Type your message..."
             autofocus
             autocomplete="false"
@@ -57,6 +45,7 @@
         <v-btn
             class="btn mr-4"
             color="success"
+            @click="send"
         >
           <span class="btn-span">Send</span>
         </v-btn>
@@ -72,15 +61,21 @@
 </template>
 
 <script>
-// import firebase from 'firebase'
 import { mapActions, mapState, mapGetters } from 'vuex';
+import DisplayUsers from '@/components/DisplayUsers';
 
 export default {
   name: "Chat",
-  components: {},
+  components: {
+    DisplayUsers
+  },
   data() {
     return {
       drawer: null,
+      newMessage: '',
+      messages: [
+
+      ]
     }
   },
   computed: {
@@ -93,10 +88,18 @@ export default {
   },
   methods: {
     ...mapActions('storage', [
-      'logoutUser'
+      'logoutUser',
+      'saveMessage'
     ]),
     logout() {
       this.logoutUser();
+    },
+    send() {
+      this.messages.push({
+        text: this.newMessage,
+        from: 'me',
+        createdAt: new Date(),
+      })
     },
   },
 }
@@ -108,43 +111,15 @@ export default {
   height: calc(70vh - 64px);
   width: 100%;
 }
+
 .actions {
   border-top: 1px solid #272727;
   height: calc(30vh - 31px);
   padding: 20px;
 }
+
 .chat-messages {
   width: 100%;
   overflow-y: auto;
-}
-.users-list__text {
-
-}
-.online {
-  border: 1px;
-  border-radius: 6px;
-  background: #4caf50;
-  color: #fff;
-  margin-left: auto;
-  padding: 2px;
-}
-.offline {
-  border: 1px;
-  border-radius: 6px;
-  background: #4caf50;
-  color: #fff;
-  margin-left: auto;
-  padding: 2px;
-  opacity: 0.5;
-}
-.users-list__avatar {
-  background: #3f51b5;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  color: #fff;
-  text-align: center;
-  line-height: 35px;
-  margin-right: 3px;
 }
 </style>

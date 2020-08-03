@@ -8,6 +8,7 @@ import db from '@/main'
 const state = {
   userDetails: {},
   users: {},
+  messages: {}
 }
 
 const mutations = {
@@ -92,10 +93,25 @@ const actions = {
         userDetails
       })
     })
+  },
+  saveMessage(messageInfo, payload) {
+    console.log(payload)
   }
 }
 const getters = {
   users: state => {
+    // Object.keys(state.users).forEach(key => {
+    //   if (key === state.userDetails.userId) {
+    //     usersFiltered[key] = state.users[key]
+    //   }
+    // })
+    // let yourUsername = {}
+    // Object.keys(state.users).forEach(key => {
+    //   if (key === state.userDetails.userId) {
+    //     console.log(key)
+    //
+    //   }
+    // })
     return state.users
   }
 }
