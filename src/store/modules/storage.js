@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 import firebase from 'firebase';
 import db from '@/main'
 
@@ -5,11 +7,18 @@ import db from '@/main'
 
 const state = {
   userDetails: {},
+  users: {},
 }
 
 const mutations = {
   setUserDetails(state, payload) {
     state.userDetails = payload
+  },
+  addUser(state, payload) {
+    Vue.set(state.users, payload.userId, payload.userDetails)
+  },
+  updateUser(state, payload) {
+    Object.assign(state.users[payload.userId], payload.userDetails)
   }
 }
 const actions = {
@@ -17,8 +26,7 @@ const actions = {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
-    firebase.auth().signInWithPopup(provider).then(result => {
-      console.log(result)
+    firebase.auth().signInWithPopup(provider).then(() => {
       let userId = firebase.auth().currentUser.uid
       db.ref(`users/` + userId).set({
         name: payload.name,
@@ -44,30 +52,53 @@ const actions = {
             userId: userId,
           })
         })
-        dispatch('fireBaseUpdateUser', {
+        dispatch('firebaseUpdateUser', {
           userId: userId,
           updates: {
             online: true
           }
         })
-        this.$router.push('/')
+        dispatch('firebaseGetUsers')
       } else {
-        dispatch('fireBaseUpdateUser', {
+        dispatch('firebaseUpdateUser', {
           userId: state.userDetails.userId,
           updates: {
             online: false
           }
         })
         commit('setUserDetails', {})
-        this.$router.replace('/auth')
       }
     })
   },
-  fireBaseUpdateUser(object, payload) {
-    db.ref('users/' + payload.userId).update(payload.updates)
+  firebaseUpdateUser(object, payload) {
+    if (payload.userId) {
+      db.ref('users/' + payload.userId).update(payload.updates)
+    }
+  },
+  firebaseGetUsers({ commit }) {
+    db.ref('users').on('child_added', snapshot => {
+      let userDetails = snapshot.val()
+      let userId = snapshot.key
+      commit('addUser', {
+        userId,
+        userDetails
+      })
+    })
+    db.ref('users').on('child_changed', snapshot => {
+      let userDetails = snapshot.val()
+      let userId = snapshot.key
+      commit('updateUser', {
+        userId,
+        userDetails
+      })
+    })
   }
 }
-const getters = {}
+const getters = {
+  users: state => {
+    return state.users
+  }
+}
 
 export default {
   namespaced: true,

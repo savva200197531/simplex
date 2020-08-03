@@ -4,8 +4,17 @@
         v-model="drawer"
         app
     >
-      <v-list class="users-list" dense>
-
+      <v-list
+          v-for="(user, key) in users"
+          :key="key"
+          class="users-list"
+          dense
+      >
+        <v-list-item>
+          <span class="users-list__avatar">{{ user.name.charAt(0) }}</span>
+          {{ user.name }}
+          <span class="users-list__text text" :class="user.online ? 'online' : 'offline'">{{ user.online ? 'Online' : 'Offline' }}</span>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -18,11 +27,15 @@
       <v-toolbar-title>Simplex Chat</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
-          @click="logout"
           color="indigo"
           class="btn mr-4 white--text v-btn--outlined"
+          @click="logout"
+          v-if="userDetails.userId"
       >
-        Logout
+        <h4 class="btn__text">
+          Logout<br>
+          <p class="btn__text-username mb-0">{{ userDetails.name }}</p>
+        </h4>
       </v-btn>
     </v-app-bar>
 
@@ -36,16 +49,13 @@
         <v-textarea
             type=""
             placeholder="Type your message..."
-            v-model.trim="message"
             autofocus
             autocomplete="false"
-            @keydown.enter="saveMessage"
         >
         </v-textarea>
 
         <v-btn
             class="btn mr-4"
-            @click="saveMessage"
             color="success"
         >
           <span class="btn-span">Send</span>
@@ -62,72 +72,37 @@
 </template>
 
 <script>
-import firebase from 'firebase'
+// import firebase from 'firebase'
+import { mapActions, mapState, mapGetters } from 'vuex';
+
 export default {
   name: "Chat",
-  components: {
-
-  },
+  components: {},
   data() {
     return {
-      // vuetify
       drawer: null,
-      // login
-      message: null,
-      messages: [],
-      authUser: {},
-      author: '',
-      userNickname: '',
-      // user info
-      allUsers: [],
-      userId: '',
     }
   },
+  computed: {
+    ...mapState('storage', [
+      'userDetails',
+    ]),
+    ...mapGetters('storage', [
+      'users'
+    ])
+  },
   methods: {
-    saveMessage() {
-
-    },
-    fetchMessages() {
-
-    },
-    saveNicknamesId() {
-
-    },
-    viewNicknames() {
-
-    },
+    ...mapActions('storage', [
+      'logoutUser'
+    ]),
     logout() {
-      firebase.auth().signOut();
-      this.$router.push('/auth').catch(() => {
-      })
-    },
-    scrollToBottom() {
-
+      this.logoutUser();
     },
   },
-  created() {
-
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          next();
-        } else {
-          vm.$router.push('/auth').catch(() => {
-          })
-        }
-      })
-    })
-  }
 }
 </script>
 
 <style scoped>
-.active {
-}
-.your-message {
-}
 .chat {
   display: flex;
   height: calc(70vh - 64px);
@@ -141,5 +116,35 @@ export default {
 .chat-messages {
   width: 100%;
   overflow-y: auto;
+}
+.users-list__text {
+
+}
+.online {
+  border: 1px;
+  border-radius: 6px;
+  background: #4caf50;
+  color: #fff;
+  margin-left: auto;
+  padding: 2px;
+}
+.offline {
+  border: 1px;
+  border-radius: 6px;
+  background: #4caf50;
+  color: #fff;
+  margin-left: auto;
+  padding: 2px;
+  opacity: 0.5;
+}
+.users-list__avatar {
+  background: #3f51b5;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  color: #fff;
+  text-align: center;
+  line-height: 35px;
+  margin-right: 3px;
 }
 </style>

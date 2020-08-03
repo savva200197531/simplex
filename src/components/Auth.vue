@@ -13,8 +13,10 @@
           @click="logout"
           v-if="userDetails.userId"
       >
-        Logout<br>
-        {{ userDetails.name }}
+        <h4 class="btn__text">
+          Logout<br>
+          <p class="btn__text-username mb-0">{{ userDetails.name }}</p>
+        </h4>
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -96,7 +98,6 @@ export default {
       this.authUser(this.userInfo);
     },
     logout() {
-      console.log('logout')
       this.logoutUser();
     },
     reset() {

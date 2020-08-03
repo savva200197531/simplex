@@ -13,7 +13,7 @@ import firebase from 'firebase';
 
 require("firebase/firestore")
 
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyA6DxHECxq5JENko95YbeUJH6ZLoQc8yjQ",
   authDomain: "simplex-ced4e.firebaseapp.com",
   databaseURL: "https://simplex-ced4e.firebaseio.com",

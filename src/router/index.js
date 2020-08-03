@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Chat from '@/components/Chat';
 import Auth from '@/components/Auth';
-// import Login from '@/components/Login';
 
 Vue.use(VueRouter)
 
@@ -17,11 +16,6 @@ const routes = [
     name: 'Auth',
     component: Auth,
   },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: Login
-  // },
 ]
 
 const router = new VueRouter({
