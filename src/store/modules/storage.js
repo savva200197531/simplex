@@ -23,6 +23,7 @@ const mutations = {
   },
   addMessage(state, payload) {
     Vue.set(state.messages, payload.messageId, payload.messageDetails)
+    console.log(state.messages)
   }
 }
 const actions = {
@@ -97,30 +98,25 @@ const actions = {
       })
     })
   },
-  firebaseGetMessages({ commit, state }) {
-    setTimeout(() => {
-      let userId = state.userDetails.userId
-      if (userId) {
-        db.ref('chat').on('child_added', snapshot => {
-          let messageDetails = snapshot.val()
-          let messageId = snapshot.key
-          commit('addMessage', {
-            messageId,
-            messageDetails
-          })
-        })
-      }
-    }, 3000)
+  firebaseGetMessages({ commit }) {
+    firebase.database().ref('chat').on('child_added', snapshot => {
+      let messageDetails = snapshot.val()
+      let messageId = snapshot.key
+      commit('addMessage', {
+        messageId,
+        messageDetails
+      })
+    })
   },
   firebaseSendMessage(messageInfo, payload) {
     let userId = state.userDetails.userId
     let key = payload.createdAt.getMilliseconds()
     let hours = payload.createdAt.getHours()
     let minutes = payload.createdAt.getMinutes()
-    db.ref('chat/' + userId).push({
+    db.ref('chat').push({
       message: payload.newMessage,
       key: key,
-      createdAt: `${hours}:${minutes}`,
+      createdAt: `${ hours }:${ minutes }`,
       id: userId,
       from: state.userDetails.name,
       email: state.userDetails.email

@@ -28,20 +28,15 @@
     </v-app-bar>
 
     <v-main>
-      <div
-          class="chat"
-          v-for="mes in messages"
-          :key="mes.text"
-      >
+      <div class="chat">
         <v-list
-            class="chat-messages"
-            v-for="m in mes"
-            :key="m.key"
+            v-for="mes in messages"
+            :key="mes.text"
+            class="chat__list"
+            :class="{'owner': mes.id === userDetails.userId}"
         >
-          <v-list-item
-
-          >
-            {{ m.from }}: {{ m.message }}
+          <v-list-item class="chat__item theme--dark">
+            {{ mes.from }}: {{ mes.message }}
           </v-list-item>
         </v-list>
       </div>
@@ -99,7 +94,7 @@ export default {
     ]),
     ...mapGetters('storage', [
       'users'
-    ])
+    ]),
   },
   methods: {
     ...mapActions('storage', [
@@ -125,20 +120,35 @@ export default {
 </script>
 
 <style scoped>
-.chat {
-  display: flex;
-  height: calc(70vh - 64px);
-  width: 100%;
-}
-
 .actions {
   border-top: 1px solid #272727;
   height: calc(30vh - 31px);
   padding: 20px;
 }
 
-.chat-messages {
+.chat {
+  height: calc(70vh - 64px);
   width: 100%;
   overflow-y: auto;
+}
+
+.chat__list {
+  display: flex;
+}
+
+.chat__list.owner {
+  justify-content: flex-end;
+}
+.chat__item {
+  border-radius: 3px;
+  font-size: 15px;
+  max-width: 40%;
+  max-height: 100%;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  text-align: justify;
+  background: #3f51b5;
 }
 </style>
