@@ -8,7 +8,7 @@ import db from '@/main'
 const state = {
   userDetails: {},
   users: {},
-  messages: {}
+  messages: {},
 }
 
 const mutations = {
@@ -20,6 +20,9 @@ const mutations = {
   },
   updateUser(state, payload) {
     Object.assign(state.users[payload.userId], payload.userDetails)
+  },
+  addMessage(state, payload) {
+    Vue.set(state.messages, payload.messageId, payload.messageDetails)
   }
 }
 const actions = {
@@ -94,8 +97,34 @@ const actions = {
       })
     })
   },
-  saveMessage(messageInfo, payload) {
-    console.log(payload)
+  firebaseGetMessages({ commit, state }) {
+    setTimeout(() => {
+      let userId = state.userDetails.userId
+      if (userId) {
+        db.ref('chat').on('child_added', snapshot => {
+          let messageDetails = snapshot.val()
+          let messageId = snapshot.key
+          commit('addMessage', {
+            messageId,
+            messageDetails
+          })
+        })
+      }
+    }, 3000)
+  },
+  firebaseSendMessage(messageInfo, payload) {
+    let userId = state.userDetails.userId
+    let key = payload.createdAt.getMilliseconds()
+    let hours = payload.createdAt.getHours()
+    let minutes = payload.createdAt.getMinutes()
+    db.ref('chat/' + userId).push({
+      message: payload.newMessage,
+      key: key,
+      createdAt: `${hours}:${minutes}`,
+      id: userId,
+      from: state.userDetails.name,
+      email: state.userDetails.email
+    })
   }
 }
 const getters = {

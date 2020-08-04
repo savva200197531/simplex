@@ -28,14 +28,27 @@
     </v-app-bar>
 
     <v-main>
-      <div class="chat">
-        <v-list class="chat-messages">
+      <div
+          class="chat"
+          v-for="mes in messages"
+          :key="mes.text"
+      >
+        <v-list
+            class="chat-messages"
+            v-for="m in mes"
+            :key="m.key"
+        >
+          <v-list-item
 
+          >
+            {{ m.from }}: {{ m.message }}
+          </v-list-item>
         </v-list>
       </div>
       <div class="actions">
         <v-textarea
-            v-model="newMessage"
+            v-model.trim="message.newMessage"
+            @keydown.enter="sendMessage"
             placeholder="Type your message..."
             autofocus
             autocomplete="false"
@@ -45,7 +58,8 @@
         <v-btn
             class="btn mr-4"
             color="success"
-            @click="send"
+            @click="sendMessage"
+            :disabled="message.newMessage.length === 0"
         >
           <span class="btn-span">Send</span>
         </v-btn>
@@ -72,15 +86,16 @@ export default {
   data() {
     return {
       drawer: null,
-      newMessage: '',
-      messages: [
-
-      ]
+      message: {
+        newMessage: '',
+        createdAt: new Date()
+      },
     }
   },
   computed: {
     ...mapState('storage', [
       'userDetails',
+      'messages'
     ]),
     ...mapGetters('storage', [
       'users'
@@ -89,19 +104,23 @@ export default {
   methods: {
     ...mapActions('storage', [
       'logoutUser',
-      'saveMessage'
+      'firebaseSendMessage',
+      'firebaseGetMessages'
     ]),
     logout() {
       this.logoutUser();
     },
-    send() {
-      this.messages.push({
-        text: this.newMessage,
-        from: 'me',
-        createdAt: new Date(),
-      })
+    sendMessage() {
+      if (this.message.newMessage.length !== 0) {
+        this.firebaseSendMessage(this.message)
+        this.firebaseGetMessages()
+        this.message.newMessage = '';
+      }
     },
   },
+  mounted() {
+    this.firebaseGetMessages()
+  }
 }
 </script>
 
