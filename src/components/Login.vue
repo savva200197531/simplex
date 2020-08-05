@@ -80,9 +80,9 @@ export default {
     checkbox: false,
   }),
   methods: {
-    ...mapActions('storage', ['loginUser']),
+    ...mapActions('storage', ['authUser']),
     login() {
-      this.loginUser(this.userInfo);
+      this.authUser(this.userInfo);
     },
     reset() {
       this.$refs.form.reset()

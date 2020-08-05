@@ -3,8 +3,6 @@ import Vue from 'vue'
 import firebase from 'firebase';
 import db from '@/main'
 
-// import router from '@/router';
-
 const state = {
   userDetails: {},
   users: {},
@@ -23,7 +21,6 @@ const mutations = {
   },
   addMessage(state, payload) {
     Vue.set(state.messages, payload.messageId, payload.messageDetails)
-    console.log(state.messages)
   }
 }
 const actions = {
@@ -125,18 +122,6 @@ const actions = {
 }
 const getters = {
   users: state => {
-    // Object.keys(state.users).forEach(key => {
-    //   if (key === state.userDetails.userId) {
-    //     usersFiltered[key] = state.users[key]
-    //   }
-    // })
-    // let yourUsername = {}
-    // Object.keys(state.users).forEach(key => {
-    //   if (key === state.userDetails.userId) {
-    //     console.log(key)
-    //
-    //   }
-    // })
     return state.users
   }
 }
