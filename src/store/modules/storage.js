@@ -11,17 +11,21 @@ const state = {
 
 const mutations = {
   setUserDetails(state, payload) {
+    console.log('setUserDetails')
     state.userDetails = payload
   },
   addUser(state, payload) {
+    console.log('addUser')
     Vue.set(state.users, payload.userId, payload.userDetails)
   },
   updateUser(state, payload) {
+    console.log('updateUser')
     Object.assign(state.users[payload.userId], payload.userDetails)
   },
   addMessage(state, payload) {
+    console.log('addMessage')
     Vue.set(state.messages, payload.messageId, payload.messageDetails)
-  }
+  },
 }
 const actions = {
   authUser(userInfo, payload) {

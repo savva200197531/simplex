@@ -13,10 +13,10 @@
           @click="logout"
           v-if="userDetails.userId"
       >
-        <h4 class="btn__text">
+        <div class="btn__text">
           Logout<br>
           <p class="btn__text-username mb-0">{{ userDetails.name }}</p>
-        </h4>
+        </div>
       </v-btn>
     </v-app-bar>
     <v-main>
@@ -92,7 +92,7 @@ export default {
   methods: {
     ...mapActions('storage', [
         'authUser',
-        'logoutUser'
+        'logoutUser',
     ]),
     auth() {
       this.authUser(this.userInfo);
