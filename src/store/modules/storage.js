@@ -11,19 +11,15 @@ const state = {
 
 const mutations = {
   setUserDetails(state, payload) {
-    console.log('setUserDetails')
     state.userDetails = payload
   },
   addUser(state, payload) {
-    console.log('addUser')
     Vue.set(state.users, payload.userId, payload.userDetails)
   },
   updateUser(state, payload) {
-    console.log('updateUser')
     Object.assign(state.users[payload.userId], payload.userDetails)
   },
   addMessage(state, payload) {
-    console.log('addMessage')
     Vue.set(state.messages, payload.messageId, payload.messageDetails)
   },
 }
@@ -99,24 +95,31 @@ const actions = {
       })
     })
   },
-  firebaseGetMessages({ commit }) {
+  firebaseGetMessages({ commit, state }) {
     firebase.database().ref('chat').on('child_added', snapshot => {
-      let messageDetails = snapshot.val()
-      let messageId = snapshot.key
-      commit('addMessage', {
-        messageId,
-        messageDetails
-      })
+      setTimeout(() => {
+        let from = state.userDetails.name
+        let messageDetails = {
+          messageInfo: snapshot.val(),
+          from: from
+        }
+        let messageId = snapshot.key
+        commit('addMessage', {
+          messageId,
+          messageDetails
+        })
+      }, 300)
     })
+  },
+  firebaseUpdateMessages() {
+
   },
   firebaseSendMessage(messageInfo, payload) {
     let userId = state.userDetails.userId
-    let key = payload.createdAt.getMilliseconds()
     let hours = payload.createdAt.getHours()
     let minutes = payload.createdAt.getMinutes()
     db.ref('chat').push({
       message: payload.newMessage,
-      key: key,
       createdAt: `${ hours }:${ minutes }`,
       id: userId,
       from: state.userDetails.name,

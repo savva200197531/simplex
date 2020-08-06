@@ -7,13 +7,13 @@
         v-for="(mes, idx) in messages"
         :key="idx"
         class="chat__list"
-        :class="{'owner': mes.id === userDetails.userId}"
+        :class="{'owner': mes.messageInfo.id === userDetails.userId}"
     >
       <v-list-item
           class="chat__item theme--dark"
           :class="{'hidden': !showMessages}"
       >
-        {{ mes.from }}: {{ mes.message }}
+        {{ mes.messageInfo.from }}: {{ mes.messageInfo.message }}
       </v-list-item>
     </v-list>
   </div>
@@ -64,6 +64,7 @@ export default {
   height: calc(70vh - 64px);
   width: 100%;
   overflow-y: auto;
+  padding: 0 10px;
 }
 
 .chat__list {
@@ -85,6 +86,7 @@ export default {
   hyphens: auto;
   text-align: justify;
   background: #3f51b5;
+  position: relative;
 }
 
 .hidden {
