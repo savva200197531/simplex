@@ -64,5 +64,6 @@ export default {
 <style scoped>
 .actions {
   border-top: 2px solid #3f51b5;
+  padding: 0 10px;
 }
 </style>
