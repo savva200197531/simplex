@@ -43,7 +43,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import DisplayUsers from '@/components/DisplayUsers';
-import ShowMessages from '@/components/showMessages';
+import ShowMessages from '@/components/ShowMessages';
 import SendMessages from '@/components/SendMessages';
 
 export default {
