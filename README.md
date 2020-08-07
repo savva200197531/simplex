@@ -20,5 +20,16 @@ npm run build
 npm run lint
 ```
 
+### Install build version
+```
+cd dist
+npm install -g serve
+```
+
+### Run build version
+```
+serve
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
