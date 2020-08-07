@@ -9,11 +9,11 @@
       <v-list-item class="users-list__item">
         <span class="users-list__avatar">{{ user.name.charAt(0) }}</span>
         {{ user.name }}
-        <v-icon class="users-list__you mr-1" v-if="userDetails.email === user.email">mdi-account-circle</v-icon>
         <span
             class="users-list__text text"
             :class="user.online ? 'online' : 'offline'"
         >
+          <v-icon class="users-list__you mr-1" v-if="userDetails.email === user.email">mdi-account-check-outline</v-icon>
           {{ user.online ? 'Online' : 'Offline' }}
         </span>
       </v-list-item>
@@ -26,6 +26,11 @@ import { mapGetters, mapState } from 'vuex';
 
 export default {
   name: "DisplayUsers",
+  data() {
+    return {
+
+    }
+  },
   computed: {
     ...mapState('storage', [
       'userDetails',
@@ -72,7 +77,7 @@ export default {
   margin-right: 3px;
 }
 
-.users-list__you {
+.users-list__text {
   margin-left: auto;
 }
 </style>

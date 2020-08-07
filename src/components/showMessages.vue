@@ -7,13 +7,20 @@
         v-for="(mes, idx) in messages"
         :key="idx"
         class="chat__list"
-        :class="{'owner': mes.messageInfo.id === userDetails.userId}"
+        :class="{'owner': mes.id === userDetails.userId}"
     >
       <v-list-item
           class="chat__item theme--dark"
           :class="{'hidden': !showMessages}"
+          @click="showTime"
       >
-        {{ mes.messageInfo.from }}: {{ mes.messageInfo.message }}
+        <span
+            class="chat__time"
+            :class="{'your-time': mes.id === userDetails.userId}"
+        >
+          {{ mes.createdAt }}
+        </span>
+        <span class="chat__nickname font-weight-bold">{{ mes.from }}</span>: {{ mes.message }}
       </v-list-item>
     </v-list>
   </div>
@@ -27,6 +34,7 @@ export default {
   data() {
     return {
       showMessages: false,
+
     }
   },
   computed: {
@@ -44,6 +52,9 @@ export default {
       setTimeout(() => {
         this.showMessages = true
       }, 1000)
+    },
+    showTime() {
+
     }
   },
   watch: {
@@ -69,10 +80,23 @@ export default {
 
 .chat__list {
   display: flex;
+  position: relative;
 }
 
 .chat__list.owner {
   justify-content: flex-end;
+}
+
+.chat__time {
+  position: absolute;
+  right: -50px;
+  color: black;
+  display: inline-block;
+}
+
+.your-time {
+  left: -50px;
+  right: 0;
 }
 
 .chat__item {

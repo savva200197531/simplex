@@ -3,8 +3,6 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify';
 import router from './router'
 
-// socket IO
-
 // vuex
 import store from './store'
 

@@ -74,7 +74,7 @@ export default {
   data: () => ({
     valid: true,
     userInfo: {
-      name: 'Andrew',
+      name: '',
     },
     nameRules: [
       v => !!v || 'Name is required',
@@ -82,7 +82,7 @@ export default {
       v => (v || '').indexOf(' ') < 0 || 'No spaces are allowed',
       v => /^[a-zA-Z0-9_-]+$/.test(v) || 'Only english letters',
     ],
-    checkbox: true,
+    checkbox: false,
   }),
   computed: {
     ...mapState('storage', [

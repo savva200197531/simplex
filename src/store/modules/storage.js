@@ -95,29 +95,22 @@ const actions = {
       })
     })
   },
-  firebaseGetMessages({ commit, state }) {
+  firebaseGetMessages({ commit }) {
     firebase.database().ref('chat').on('child_added', snapshot => {
-      setTimeout(() => {
-        let from = state.userDetails.name
-        let messageDetails = {
-          messageInfo: snapshot.val(),
-          from: from
-        }
-        let messageId = snapshot.key
-        commit('addMessage', {
-          messageId,
-          messageDetails
-        })
-      }, 300)
+      let messageDetails = snapshot.val()
+      let messageId = snapshot.key
+      commit('addMessage', {
+        messageId,
+        messageDetails
+      })
     })
   },
-  firebaseUpdateMessages() {
-
-  },
   firebaseSendMessage(messageInfo, payload) {
+    let numDigits = 2;
     let userId = state.userDetails.userId
     let hours = payload.createdAt.getHours()
-    let minutes = payload.createdAt.getMinutes()
+    let minutesStr = payload.createdAt.getMinutes().toString()
+    const minutes = numDigits >= minutesStr.length ? Array.apply(null, { length: numDigits - minutesStr.length + 1 }).join("0") + minutesStr : minutesStr.substring(0, numDigits);
     db.ref('chat').push({
       message: payload.newMessage,
       createdAt: `${ hours }:${ minutes }`,
